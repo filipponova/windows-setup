@@ -16,6 +16,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
+
       - name: Test PowerShell winget install script
         run: |
           if (Test-Path .\install.ps1) {
