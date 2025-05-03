@@ -4,13 +4,12 @@ on:
   push:
     paths:
       - '**.ps1'
-      - '**.psm1'
-      - '**/winget*.json'
   pull_request:
     paths:
       - '**.ps1'
-      - '**.psm1'
-      - '**/winget*.json'
+      
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   script-validate:
