@@ -1,0 +1,31 @@
+name: Security Checks
+
+on:
+  push:
+    paths:
+      - '**.ps1'
+      - '**.psm1'
+      - '**/winget*.json'
+  pull_request:
+    paths:
+      - '**.ps1'
+      - '**.psm1'
+      - '**/winget*.json'
+
+jobs:
+  powershell-security:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install PSScriptAnalyzer
+        run: Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+
+      - name: Run PSScriptAnalyzer
+        run: |
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse
+          if ($results.Count -gt 0) {
+            $results | Format-Table | Out-String | Write-Host
+            exit 1
+          }
