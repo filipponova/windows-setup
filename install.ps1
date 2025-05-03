@@ -1,7 +1,7 @@
 # Check if winget is available
 function Find-Winget {
     if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-        Write-Host "Winget is not installed. Please install it first." -ForegroundColor Red
+        Write-Output "Winget is not installed. Please install it first."
         exit 1
     }
 }
@@ -12,7 +12,7 @@ function Find-PackagesFile {
         [string]$FilePath
     )
     if (-not (Test-Path $FilePath)) {
-        Write-Host "$FilePath file not found. Please create it with the list of packages." -ForegroundColor Red
+        Write-Output "$FilePath file not found. Please create it with the list of packages."
         exit 1
     }
 }
@@ -27,15 +27,15 @@ function Get-PackageInstalled {
 }
 
 # Install a package
-function Install-Package {
+function Add-Package {
     param (
         [string]$PackageName
     )
-    Write-Host "Installing $PackageName..." -ForegroundColor Cyan
+    Write-Output "Installing $PackageName..."
     try {
-        winget install --id $PackageName --silent --accept-source-agreements --accept-package-agreements --source winget
+        winget install --id $PackageName --silent --accept-source-agreements --disable-interactivity --accept-package-agreements --source winget
     } catch {
-        Write-Host "Failed to install $PackageName" -ForegroundColor Red
+        Write-Output "Failed to install $PackageName"
     }
 }
 
@@ -49,15 +49,15 @@ function Main {
     $packages = Get-Content $packageListFile | Where-Object { $_ -and $_.Trim() -ne "" }
 
     foreach ($package in $packages) {
-        Write-Host "Checking if $package is already installed..." -ForegroundColor Yellow
+        Write-Output "Checking if $package is already installed..."
         if (Get-PackageInstalled -PackageName $package) {
-            Write-Host "$package is already installed. Skipping..." -ForegroundColor Green
+            Write-Output "$package is already installed. Skipping..."
             continue
         }
-        Install-Package -PackageName $package
+        Add-Package -PackageName $package
     }
 
-    Write-Host "All done!" -ForegroundColor Green
+    Write-Output "All done!"
 }
 
 # Execute the main function
