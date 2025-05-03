@@ -4,13 +4,9 @@ on:
   push:
     paths:
       - '**.ps1'
-      - '**.psm1'
-      - '**/winget*.json'
   pull_request:
     paths:
       - '**.ps1'
-      - '**.psm1'
-      - '**/winget*.json'
 
 jobs:
   powershell-security:
