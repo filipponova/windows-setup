@@ -1,0 +1,34 @@
+name: Security Checks
+
+on:
+  push:
+    paths:
+      - '**.ps1'
+      - '**.psm1'
+      - '**/winget*.json'
+  pull_request:
+    paths:
+      - '**.ps1'
+      - '**.psm1'
+      - '**/winget*.json'
+
+jobs:
+  script-validate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test PowerShell winget install script
+        run: |
+          if (Test-Path .\install.ps1) {
+            Write-Host "Testing script..."
+            try {
+              .\install.ps1
+            } catch {
+              Write-Error "Script test failed: $_"
+              exit 1
+            }
+          } else {
+            Write-Host "No script found to test."
+          }
